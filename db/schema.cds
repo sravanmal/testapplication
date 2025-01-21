@@ -28,8 +28,7 @@ context transaction {
         _Comments           : Composition of many Comments
                                   on _Comments._headercomment = $self; // comments
         Request_No          : String(10); // Request No
-        _attachments        : Composition of many media
-                                  on _attachments._HeaderAttachments = $self;
+       
         TotalPrice          : Integer;
 
     }
@@ -60,24 +59,6 @@ context transaction {
     entity Comments : cuid, managed {
         _headercomment : Association to Request_Header;
         text           : String // Text
-    }
-
-
-    // media
-    entity media : cuid, managed {
-        @Core.ContentDisposition.Filename: fileName
-        @Core.ContentDisposition.Type    : 'inline'
-        _HeaderAttachments : Association to Request_Header;
-
-        @Core.MediaType                  : MediaType
-        content            : LargeBinary;
-        fileName           : String;
-
-        @Core.IsMediaType                : true
-        MediaType          : String;
-        size               : Integer;
-        url                : String;
-
     }
 
 

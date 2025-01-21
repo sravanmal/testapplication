@@ -9,6 +9,7 @@ modules:
   requires:
   - name: testapplication-db
   - name: uaa_testapplication
+  - name: documentManagementInstance
   provides:
   - name: srv-api
     properties:
@@ -81,6 +82,11 @@ modules:
     - npm run build:cf
     supported-platforms: []
 resources:
+- name: documentManagementInstance
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: sdm
+    service-plan: standard
 - name: testapplication-db
   type: com.sap.xs.hdi-container
   parameters:

@@ -101,12 +101,6 @@ module.exports = cds.service.impl(async function () {
   });
 
 
-  // this.after('UPDATE','Request_Item.drafts' , async (req) => {
-
-  //   const updateddata = await SELECT.from(Request_Item.drafts).where({ ID: req.ID });
-
-  //   console.log("hi");
-  // })
 
   
   this.after(['CREATE','UPDATE'] , 'Request_Header' , async (req) => {
@@ -147,6 +141,37 @@ module.exports = cds.service.impl(async function () {
 
     const updateitems = await SELECT.from(Request_Header).where({ ID: req.params[0].ID });
     console.log(updateitems);
+
+    const product_api = await cds.connect.to('bpa_destination');
+
+    let payload = {
+      "definitionId": "us10.buyerportalpoc-aeew31u1.directrequsitiont1.directRequsitionT1",
+      "context": {
+          "input": {
+              "RequestNo": "100",
+              "RequestDesc": "sravan",
+              "RequestId": "",
+              "RequestBy": "",
+              "TotalPrice": 1000,
+              "RequestItem": [
+                  {
+                      "ItemPrice": 0,
+                      "Quantity": 0,
+                      "Material": "",
+                      "Plant": "",
+                      "ItemNumber": "",
+                      "ItemDescription": ""
+                  }
+              ]
+          }
+      }
+  }
+    let oResult = await product_api.tx(req).post('/workflow/rest/v1/workflow-instances', payload);
+    
+    if (response.status !== 201) {
+      throw new Error('Failed to trigger the process.');
+    }
+
 
   });
 

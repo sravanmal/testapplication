@@ -1,0 +1,41 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:semantic="sap.f.semantic"
+    xmlns:form="sap.ui.layout.form"
+    xmlns:l="sap.ui.layout">
+	
+
+	<l:VerticalLayout width="100%" core:require="{ handler: 'sravan/testapplication/ext/fragment/Comments'}">
+        <!-- Existing Panel -->
+        <Panel
+            backgroundDesign="Transparent"
+            headerText="">
+            <!-- Add your content here -->
+        </Panel>
+
+        <!-- Comments Panel -->
+        <Panel
+            backgroundDesign="Transparent"
+            headerText="{i18n>Comments}">
+            <content>
+                <!-- Input for Adding Comments -->
+                <FeedInput post="handler.onPost" visible="{ui>/isEditable}"/>
+                
+                <!-- List for Displaying Comments -->
+                <List
+                    id="idCommentsList"
+                    noDataText="{i18n>ObjectCommentNoData}"
+                    showSeparators="Inner"
+                    items="{_Comments}">
+                    <!-- Template for Each Comment -->
+                    <FeedListItem 
+                        id="idfeedlistitem"
+                        text="{text}"/>
+                </List>
+                
+            </content>
+        </Panel>
+    </l:VerticalLayout>
+
+
+</core:FragmentDefinition>

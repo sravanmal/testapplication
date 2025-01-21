@@ -6,17 +6,20 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^8",
-    "express": "^4",
     "@cap-js/hana": "^1",
-    "@sap/xssec": "^4"
+    "@cap-js/sdm": "^1.2.2",
+    "@sap-cloud-sdk/http-client": "^3.25.0",
+    "@sap-cloud-sdk/resilience": "^3.25.0",
+    "@sap/cds": "^8",
+    "@sap/xssec": "^4",
+    "express": "^4"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.8.0",
     "@cap-js/sqlite": "^1",
     "@sap/cds-dk": "^8",
-    "rimraf": "^5.0.5",
-    "mbt": "^1.2.29"
+    "mbt": "^1.2.29",
+    "rimraf": "^5.0.5"
   },
   "scripts": {
     "start": "cds-serve",
@@ -33,6 +36,17 @@
       "[production]": {
         "db": "hana",
         "auth": "xsuaa"
+      },
+      "sdm": {
+        "settings": {
+          "repositoryId": "4d4ecb70-02a5-44af-bb60-fe18c9e3ef7e"
+        }
+      },
+      "bpa_destination": {
+        "kind": "rest",
+        "credentials": {
+          "destination": "testdirectreq"
+        }
       }
     }
   },
