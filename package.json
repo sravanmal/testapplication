@@ -35,17 +35,27 @@
     "requires": {
       "[production]": {
         "db": "hana",
-        "auth": "xsuaa"
+        "auth": "dummy"
       },
       "sdm": {
         "settings": {
           "repositoryId": "4d4ecb70-02a5-44af-bb60-fe18c9e3ef7e"
         }
       },
+      "connectivity": true,
+      "destinations": true,
       "bpa_destination": {
         "kind": "rest",
         "credentials": {
           "destination": "testdirectreq"
+        }
+      },
+      "OP_API_PRODUCT_SRV_0001": {
+        "kind": "odata-v2",
+        "model": "srv/external/OP_API_PRODUCT_SRV_0001",
+        "credentials": {
+          "destination": "S4H",
+          "path": "/sap/opu/odata/sap/API_PRODUCT_SRV"
         }
       }
     }

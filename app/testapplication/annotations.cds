@@ -317,5 +317,24 @@ annotate service.Request_Header with {
 };
 
 
+annotate service.Request_Item {
+    Material @Common.ValueList: { 
+        CollectionPath : 'MaterialSet', 
+    Parameters : [ 
+      {$Type: 'Common.ValueListParameterInOut', LocalDataProperty: Material, ValueListProperty: 'ID'},
+      {$Type: 'Common.ValueListParameterOut', LocalDataProperty: Material_Description, ValueListProperty: 'Desc'},   
+    ] 
+    }
+}
+
+
+annotate service.Request_Item {
+    Plant @Common.ValueList: { 
+        CollectionPath : 'PlantSet', 
+    Parameters : [ 
+      {$Type: 'Common.ValueListParameterOut', LocalDataProperty: Plant, ValueListProperty: 'plant'}
+    ] 
+    }
+}
 
 

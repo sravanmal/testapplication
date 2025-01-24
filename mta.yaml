@@ -9,7 +9,9 @@ modules:
   requires:
   - name: testapplication-db
   - name: uaa_testapplication
+  - name: testapplication-destination
   - name: documentManagementInstance
+  - name: testapplication-connectivity
   provides:
   - name: srv-api
     properties:
@@ -82,6 +84,11 @@ modules:
     - npm run build:cf
     supported-platforms: []
 resources:
+- name: testapplication-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
 - name: documentManagementInstance
   type: org.cloudfoundry.managed-service
   parameters:
@@ -125,6 +132,11 @@ resources:
     service: html5-apps-repo
     service-name: testapplication-html5-app-host-service
     service-plan: app-host
+- name: testapplication-connectivity
+  type: org.cloudfoundry.managed-service
+  parameters:
+      service: connectivity
+      service-plan: lite
 - name: uaa_testapplication
   type: org.cloudfoundry.managed-service
   parameters:

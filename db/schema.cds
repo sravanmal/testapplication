@@ -4,6 +4,8 @@ using {
     Currency
 } from '@sap/cds/common';
 
+using { OP_API_PRODUCT_SRV_0001 as product_api } from '../srv/external/OP_API_PRODUCT_SRV_0001';
+
 
 namespace indirectreq.ust.db;
 
@@ -60,6 +62,18 @@ context transaction {
         _headercomment : Association to Request_Header;
         text           : String // Text
     }
+
+    // projections for product and plant 
+
+    entity material  as projection on product_api.A_Product{
+        key Product as ID,
+        ProductType as Desc
+     };
+
+     entity plant  as projection on product_api.A_ProductPlant{
+        key Plant as plant,
+        
+     };
 
 
 }

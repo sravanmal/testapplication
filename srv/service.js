@@ -102,8 +102,8 @@ module.exports = cds.service.impl(async function () {
 
 
 
-  
-  this.after(['CREATE','UPDATE'] , 'Request_Header' , async (req) => {
+
+  this.after(['CREATE', 'UPDATE'], 'Request_Header', async (req) => {
 
     console.log("hi")
     console.log(req._Items);
@@ -117,12 +117,12 @@ module.exports = cds.service.impl(async function () {
         totalPrice += item.Quantity * item.UnitPrice;
       }
     });
-  
-  console.log("Total Price: " + totalPrice); // Output the total price
 
-  await UPDATE(Request_Header)
-        .set({ TotalPrice: totalPrice })  // Update the Req_Item_No field
-        .where({ ID: req.ID });  // Use the item's ID to identify it for updating
+    console.log("Total Price: " + totalPrice); // Output the total price
+
+    await UPDATE(Request_Header)
+      .set({ TotalPrice: totalPrice })  // Update the Req_Item_No field
+      .where({ ID: req.ID });  // Use the item's ID to identify it for updating
 
 
   })
@@ -142,38 +142,87 @@ module.exports = cds.service.impl(async function () {
     const updateitems = await SELECT.from(Request_Header).where({ ID: req.params[0].ID });
     console.log(updateitems);
 
+
+    // payload for bpa 
+
+    const payload_bpa_header = await SELECT.from(Request_Header).where({ ID: req.params[0].ID });
+    const payload_bpa_items = await SELECT.from(Request_Item).where({ _Header_ID: req.params[0].ID });
     const product_api = await cds.connect.to('bpa_destination');
+
+
+
 
     let payload = {
       "definitionId": "us10.buyerportalpoc-aeew31u1.directrequsitiont1.directRequsitionT1",
       "context": {
-          "input": {
-              "RequestNo": "100",
-              "RequestDesc": "sravan",
-              "RequestId": "",
-              "RequestBy": "",
-              "TotalPrice": 1000,
-              "RequestItem": [
-                  {
-                      "ItemPrice": 0,
-                      "Quantity": 0,
-                      "Material": "",
-                      "Plant": "",
-                      "ItemNumber": "",
-                      "ItemDescription": ""
-                  }
-              ]
-          }
+        "input": {
+          "RequestNo": payload_bpa_header[0]?.Request_No,
+          "RequestDesc": payload_bpa_header[0]?.Request_Description,
+          "RequestBy": payload_bpa_header[0]?.createdBy,
+          "TotalPrice": payload_bpa_header[0]?.TotalPrice,
+          "RequestItem": payload_bpa_items.map(item => ({
+            "ItemPrice": item.UnitPrice,
+            "Quantity": item.Quantity,
+            "Material": item.Material,
+            "Plant": item.Plant,
+            "ItemNumber": item.Req_Item_No,
+            "ItemDescription": item.Material_Description
+          }))
+        }
       }
-  }
+    };
+
+
+
     let oResult = await product_api.tx(req).post('/workflow/rest/v1/workflow-instances', payload);
-    
-    if (response.status !== 201) {
-      throw new Error('Failed to trigger the process.');
-    }
 
 
   });
 
-  
+  // getting materialset and plantset data
+
+  const { MaterialSet, PlantSet } = this.entities;
+  const product_api1 = await cds.connect.to('OP_API_PRODUCT_SRV_0001');
+  this.on("READ", MaterialSet, async (req) => {
+
+    req.query.where("Product <> ''");
+    req.query.SELECT.count = false;
+    return await product_api1.run(req.query);
+  });
+
+  this.on("READ", PlantSet, async (req) => {
+    req.query.where("Product <> ''");
+    req.query.SELECT.count = false;
+    return await product_api1.run(req.query);
+  });
+
+
+
+  // event handler for responsefrombpa
+
+  this.on('responsefrombpa', async (req) => {
+
+    console.log(req.data.status);
+
+    if (req.data.status === "approved") {
+      console.log("hi")
+
+      // updated status to ordered 
+
+      await UPDATE(Request_Header)
+        .set({ Status_Code: 'Ordered' })
+        .where({ ID: req.data.ID });
+
+
+    } else {
+      console.log("bye")
+
+      // update status to rejected 
+
+      await UPDATE(Request_Header)
+        .set({ Status_Code: 'Rejected' })
+        .where({ ID: req.data.ID });
+    }
+
+  })
 });
