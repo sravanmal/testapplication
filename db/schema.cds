@@ -5,6 +5,8 @@ using {
 } from '@sap/cds/common';
 
 using { OP_API_PRODUCT_SRV_0001 as product_api } from '../srv/external/OP_API_PRODUCT_SRV_0001';
+using { API_PLANT_SRV as plant_api } from '../srv/external/API_PLANT_SRV';
+
 
 
 namespace indirectreq.ust.db;
@@ -16,13 +18,7 @@ context transaction {
     entity Request_Header : cuid, managed {
 
         PR_Number           : String(10) @readonly; // PR number
-        Status_Code         : String     @readonly enum {
-            InApproval = 'I';
-            Approved   = 'A';
-            Rejected   = 'R';
-            Saved      = 'S';
-            Open       = 'OP';
-        } default 'Open'; // Status Code
+        Status_Code         : String(1) default 'O'  @readonly ; // Status Code
         PRType              : String; // PR type
         _Items              : Composition of many Request_Item
                                   on _Items._Header = $self; // items
@@ -30,8 +26,8 @@ context transaction {
         _Comments           : Composition of many Comments
                                   on _Comments._headercomment = $self; // comments
         Request_No          : String(10); // Request No
-       
-        TotalPrice          : Integer;
+        insertrestrictions  : Integer default 1;     // restrictions for buttons
+        TotalPrice          : Integer;     // total price
 
     }
 
@@ -39,7 +35,7 @@ context transaction {
 
     entity Request_Item : cuid, managed {
 
-        PR_Item_Number       : String(10); // PR number
+        PR_Item_Number       : String(10) @readonly; // PR number
         Material             : String  @mandatory; // .Material
         Material_Description : String  @mandatory; // Material Description
         PurOrg               : String; // .PurOrg
@@ -50,7 +46,8 @@ context transaction {
         UnitPrice            : Integer; // Unit price
         Price                : Decimal = Quantity * UnitPrice; // Price
         Currency             : Currency; // currency
-        Req_Item_No          : Integer; // Request Item Number
+        PurchasingGroup      : String;
+        Req_Item_No          : Integer ; // Request Item Number
         _Header              : Association to Request_Header;
 
     }
@@ -72,6 +69,12 @@ context transaction {
 
      entity plant  as projection on product_api.A_ProductPlant{
         key Plant as plant,
+        
+     };
+
+     entity plantapi as projection on plant_api.A_Plant{
+        key Plant as plant_id,
+        PlantName as plantname,
         
      };
 

@@ -141,20 +141,6 @@
                 }
               },
               "content": {
-                "header": {
-                  "actions": {
-                    "sendapproval": {
-                      "press": "sravan.testapplication.ext.controller.Sendforapproval._onapproval",
-                      "visible": true,
-                      "enabled": true,
-                      "text": "send for approval",
-                      "position": {
-                        "placement": "After",
-                        "anchor": "DeleteAction"
-                      }
-                    }
-                  }
-                },
                 "body": {
                   "sections": {
                     "Comments": {
@@ -164,6 +150,20 @@
                         "anchor": "_Items::LineItem"
                       },
                       "title": "Comments"
+                    }
+                  }
+                },
+                "header": {
+                  "actions": {
+                    "copyrecord": {
+                      "press": "sravan.testapplication.ext.controller.Copyheader._copy",
+                      "visible": true,
+                      "enabled": true,
+                      "text": "copy record",
+                      "position": {
+                        "placement": "After",
+                        "anchor": "DeleteAction"
+                      }
                     }
                   }
                 }

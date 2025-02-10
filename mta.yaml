@@ -84,16 +84,16 @@ modules:
     - npm run build:cf
     supported-platforms: []
 resources:
-- name: testapplication-destination
-  type: org.cloudfoundry.managed-service
-  parameters:
-    service: destination
-    service-plan: lite
 - name: documentManagementInstance
   type: org.cloudfoundry.managed-service
   parameters:
     service: sdm
     service-plan: standard
+- name: testapplication-destination
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: destination
+    service-plan: lite
 - name: testapplication-db
   type: com.sap.xs.hdi-container
   parameters:

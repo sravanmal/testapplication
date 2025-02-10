@@ -1,0 +1,18 @@
+###
+
+POST http://localhost:4004/odata/v4/IndirectReq/responsefrombpa
+Content-Type: application/json
+
+{
+    "status":"apprpoved",
+    "ID":"1000000007"
+}
+
+###
+
+POST http://localhost:4004/odata/v4/IndirectReq/Request_Header(ID='d6088a44-f0c2-4042-aec4-a70531bc4024',IsActiveEntity=true)/copyheader
+
+###
+
+http://localhost:4004/odata/v4/IndirectReq/Request_Header(ID='d6088a44-f0c2-4042-aec4-a70531bc4024',IsActiveEntity=true)?$expand=_Items
+
